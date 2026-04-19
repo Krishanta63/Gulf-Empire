@@ -1,13 +1,26 @@
 "use client";
 
+import { useState } from "react";
+
 type Props = {
   data: any;
+  photo: string | null;
 };
 
-export default function ApplicationPreview({ data }: Props) {
+
+export default function ApplicationPreview({ data, photo }: Props) {
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   return (
-    <div className="bg-white p-6 border shadow text-[12px] max-w-4xl mx-auto font-sans">
-      
+    <div
+      id="pdf-content"
+      className="bg-white p-6 border shadow text-[12px]  mx-auto font-sans relative"
+      style={{
+        width: "794px",   // ✅ A4 width
+        minHeight: "1123px", // ✅ A4 height
+        backgroundColor: "#ffffff",
+      }}
+    >
+
       {/* HEADER */}
       <div className="flex justify-between items-center border-b pb-2">
         <div>
@@ -18,7 +31,13 @@ export default function ApplicationPreview({ data }: Props) {
           <p className="text-[#7E86B5]">Tel: +977-1-4115960</p>
         </div>
         <div className="w-24 h-28 border flex items-center justify-center text-xs">
-          Photo
+         {photoPreview && (
+                        <img
+                          src={photoPreview}
+                          alt="photo"
+                          className="absolute top-8 right-8 w-28 h-32 border object-cover"
+                        />
+                      )}
         </div>
       </div>
 

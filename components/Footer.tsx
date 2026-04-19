@@ -7,6 +7,7 @@ import {
   Phone,
   Mail,
 } from "lucide-react";
+import { FaTiktok, FaFacebook, FaInstagram } from "react-icons/fa";
 
 // 👉 Move your image to /public/images/logo.png
 import logo from "@/public/images/logo.png";
@@ -18,7 +19,7 @@ const Footer: React.FC = () => {
     <footer className="bg-[#0A2463] text-white">
       <div className="container mx-auto px-10 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          
+
           {/* Company Info */}
           <div>
             <div className="mb-4">
@@ -35,15 +36,24 @@ const Footer: React.FC = () => {
             </p>
 
             <div className="flex items-center gap-3">
-              {[Mail, Mail, Mail, Mail].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-8 h-8 bg-white/10 hover:bg-[#D4AF37] rounded-full flex items-center justify-center transition-colors"
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+              {[
+                { icon: FaFacebook, link: "https://www.facebook.com/share/18LXUN6ExH/" },
+                { icon: FaInstagram, link: "https://instagram.com" },
+                { icon: FaTiktok, link: "https://www.tiktok.com/@gulfempirenepal1599?_r=1&_t=ZS-95d7yFtmAcR" },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <a
+                    key={i}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 bg-white/10 hover:bg-[#D4AF37] rounded-full flex items-center justify-center transition-colors"
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -96,7 +106,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-3">
-              
+
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-1 flex-shrink-0" />
                 <div className="text-white/80 text-sm">
@@ -124,41 +134,10 @@ const Footer: React.FC = () => {
                   info@gulfempire.com
                 </span>
               </li>
+
             </ul>
           </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            
-            <p className="text-white/60 text-sm text-center md:text-left">
-              © {currentYear} Gulf Empire Company. All rights reserved.
-            </p>
-
-            <div className="flex items-center gap-6">
-              <Link
-                href="/privacy"
-                className="text-white/60 hover:text-[#D4AF37] transition-colors text-sm"
-              >
-                Privacy Policy
-              </Link>
-
-              <Link
-                href="/terms"
-                className="text-white/60 hover:text-[#D4AF37] transition-colors text-sm"
-              >
-                Terms of Service
-              </Link>
-
-              <Link
-                href="/admin/login"
-                className="text-white/40 hover:text-white/60 transition-colors text-xs"
-              >
-                Admin
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </footer>

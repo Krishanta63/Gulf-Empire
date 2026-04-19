@@ -159,7 +159,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white text-black bg-white hover:text-[#D4AF37] w-full sm:w-auto"
+                  className="border-2 border-white text-black bg-white hover:text-[white] w-full sm:w-auto"
                 >
                   Find Your Job
                 </Button>

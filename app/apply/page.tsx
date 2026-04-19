@@ -9,6 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import ApplicationPreview from "@/components/ApplicationPreview";
+type Props = {
+  data: any;
+  photo: string | null;
+};
 
 export default function ApplyPage() {
   const params = useParams();
@@ -30,6 +34,13 @@ export default function ApplyPage() {
     skills: "",
     coverLetter: "",
   });
+  const [education, setEducation] = useState([
+    { qualification: "", institution: "", year: "" },
+  ]);
+
+  const [employment, setEmployment] = useState([
+    { company: "", position: "", years: "" },
+  ]);
 
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -52,27 +63,56 @@ export default function ApplyPage() {
     // Add your API call or submission logic here
   };
 
+  // const handleDownloadPDF = async () => {
+  //   const element = document.getElementById("pdf-content");
+  //   if (!element) {
+  //     alert("Preview not found!");
+  //     return;
+  //   }
+
+  //   const html2pdf = (await import("html2pdf.js")).default;
+
+  //   await html2pdf()
+  //     .set({
+  //       margin: 0.3,
+  //       filename: "application.pdf",
+  //       image: { type: "jpeg", quality: 1 },
+  //       html2canvas: {
+  //         scale: 2,
+  //         useCORS: true,
+  //         backgroundColor: "#ffffff",
+  //       },
+  //       jsPDF: {
+  //         unit: "in",
+  //         format: "a4",
+  //         orientation: "portrait",
+  //       },
+  //     })
+  //     .from(element)
+  //     .save();
+  // };
+
   const handleDownloadPDF = async () => {
     const element = document.getElementById("pdf-content");
-    if (!element) {
-      alert("Preview not found!");
-      return;
-    }
+    if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
 
     await html2pdf()
       .set({
-        margin: 0.3,
-        filename: "application.pdf",
+        margin: 0,
+        filename: "Application.pdf",
+
         image: { type: "jpeg", quality: 1 },
+
         html2canvas: {
-          scale: 2,
+          scale: 3,
           useCORS: true,
           backgroundColor: "#ffffff",
         },
+
         jsPDF: {
-          unit: "in",
+          unit: "mm",
           format: "a4",
           orientation: "portrait",
         },
@@ -86,7 +126,7 @@ export default function ApplyPage() {
   const [passportName, setPassportName] = useState("");
   const [certificateNames, setCertificateNames] = useState<string[]>([]);
 
-  const totalSteps = 4;
+  const totalSteps = 6;
   const handleNext = () => setStep((s) => s + 1);
   const handlePrevious = () => setStep((s) => s - 1);
 
@@ -104,7 +144,7 @@ export default function ApplyPage() {
       <section className="py-10 bg-[#F5F5F5]">
         <div className="container mx-auto px-4">
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className=" gap-8">
 
             {/* FORM */}
             <motion.div key={step} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -154,109 +194,276 @@ export default function ApplyPage() {
                   </>
                 )}
 
-
-                {/* Step 4: Preview */}
+                {/* STEP 4: Education */}
                 {step === 4 && (
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold  text-center" style={{ color: "#19316C" }}>
-
-                      Application Preview
+                  <div>
+                    <h2 className="text-xl font-bold mb-4 text-[#19316C]">
+                      Education Details
                     </h2>
 
-                    <div
-                      id="pdf-content"
-                      ref={previewRef}
-                      className="bg-white border p-8 max-w-3xl mx-auto relative"
-                      style={{ backgroundColor: "#ffffff" }} // important fix
+                    {education.map((edu, index) => (
+                      <div key={index} className="space-y-2 mb-4">
+                        <Input
+                          placeholder="Qualification"
+                          value={edu.qualification}
+                          onChange={(e) => {
+                            const updated = [...education];
+                            updated[index].qualification = e.target.value;
+                            setEducation(updated);
+                          }}
+                        />
+
+                        <Input
+                          placeholder="Institution"
+                          value={edu.institution}
+                          onChange={(e) => {
+                            const updated = [...education];
+                            updated[index].institution = e.target.value;
+                            setEducation(updated);
+                          }}
+                        />
+
+                        <Input
+                          placeholder="Year"
+                          value={edu.year}
+                          onChange={(e) => {
+                            const updated = [...education];
+                            updated[index].year = e.target.value;
+                            setEducation(updated);
+                          }}
+                        />
+                      </div>
+                    ))}
+
+                    <Button
+                      onClick={() =>
+                        setEducation([...education, { qualification: "", institution: "", year: "" }])
+                      }
                     >
-                      {/* HEADER */}
-                      <div className="text-center mb-6">
-                        <h1 className="text-lg font-bold " style={{ color: "#19316C" }}>
+                      Add More
+                    </Button>
+                  </div>
+                )}
+
+
+                {/* STEP 5: Employment History */}
+                {step === 5 && (
+                  <div>
+                    <h2 className="text-xl font-bold mb-4 text-[#19316C]">
+                      Employment History
+                    </h2>
+
+                    {employment.map((job, index) => (
+                      <div key={index} className="space-y-2 mb-4">
+                        <Input
+                          placeholder="Company"
+                          value={job.company}
+                          onChange={(e) => {
+                            const updated = [...employment];
+                            updated[index].company = e.target.value;
+                            setEmployment(updated);
+                          }}
+                        />
+
+                        <Input
+                          placeholder="Position"
+                          value={job.position}
+                          onChange={(e) => {
+                            const updated = [...employment];
+                            updated[index].position = e.target.value;
+                            setEmployment(updated);
+                          }}
+                        />
+
+                        <Input
+                          placeholder="Years"
+                          value={job.years}
+                          onChange={(e) => {
+                            const updated = [...employment];
+                            updated[index].years = e.target.value;
+                            setEmployment(updated);
+                          }}
+                        />
+                      </div>
+                    ))}
+
+                    <Button
+                      onClick={() =>
+                        setEmployment([...employment, { company: "", position: "", years: "" }])
+                      }
+                    >
+                      Add More
+                    </Button>
+                  </div>
+                )}
+
+
+                {/* Step 6: Preview */}
+                {step === 6 && (
+                  <div
+                    id="pdf-content"
+                    style={{ backgroundColor: "#ffffff", color: "#000000" }}
+                    className="p-6 rounded shadow space-y-4"
+                  >
+
+                    {/* HEADER */}
+                    <div className="flex justify-between items-center border-b pb-2">
+                      <div>
+                        <h1 style={{ color: "#1E3A8A" }} className="text-xl font-bold">
                           Gulf Empire Company Pvt. Ltd.
                         </h1>
-                        <p className="text-xs" style={{ color: "#7E86B5" }}>Kathmandu, Nepal</p>
-                        <h2 className="font-semibold underline mt-2" style={{ color: "#19316C" }}>
-                          APPLICATION FOR EMPLOYMENT
-                        </h2>
+                        <p style={{ color: "#7E86B5" }}>Minbhawan, Kathmandu, Nepal</p>
+                        <p style={{ color: "#7E86B5" }}>Tel: +977-1-4115960</p>
                       </div>
 
-                      {/* PHOTO */}
-                      {photoPreview && (
-                        <img
-                          src={photoPreview}
-                          alt="photo"
-                          className="absolute top-8 right-8 w-28 h-32 border object-cover"
-                        />
-                      )}
-
-                      {/* FORM BODY */}
-                      <div className="text-sm space-y-2">
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Full Name:</span>
-                          <span className="border-b  w-full" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.firstName} {formData.lastName}
-                          </span>
-                        </div>
-
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Email:</span>
-                          <span className="border-b  w-full" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.email}
-                          </span>
-                        </div>
-
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Phone:</span>
-                          <span className="border-b  w-full" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.phone}
-                          </span>
-                        </div>
-
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Address:</span>
-                          <span className="border-b  w-full" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.city}, {formData.country}
-                          </span>
-                        </div>
-
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Position:</span>
-                          <span className="border-b  w-full capitalize" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.position}
-                          </span>
-                        </div>
-
-                        <div className="flex">
-                          <span className="w-1/3 font-semibold" style={{ color: "#19316C" }}>Experience:</span>
-                          <span className="border-b  w-full" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.experience} years
-                          </span>
-                        </div>
-
-                        <div>
-                          <p className="font-semibold" style={{ color: "#19316C" }}>Skills:</p>
-                          <div className="border p-2 min-h-[60px]" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.skills}
-                          </div>
-                        </div>
-
-                        <div>
-                          <p className="font-semibold" style={{ color: "#19316C" }}>Cover Letter:</p>
-                          <div className="border p-2 min-h-[80px]" style={{ borderColor: "#7E86B5", color: "#7E86B5" }}>
-                            {formData.coverLetter || "N/A"}
-                          </div>
-                        </div>
+                      <div className="w-24 h-28 border flex items-center justify-center text-xs">
+                        {photoPreview && (
+                          <img
+                            src={photoPreview}
+                            alt="photo"
+                            className="w-full h-full object-cover"
+                          />
+                        )}
                       </div>
+                    </div>
 
-                      {/* SIGNATURE */}
-                      <div className="mt-8 flex justify-between text-sm">
-                        <div>
-                          <p className="border-t w-40 text-center" style={{ color: "#7E86B5" }}>Applicant Signature</p>
-                        </div>
-                        <div>
-                          <p className="border-t w-40 text-center" style={{ color: "#7E86B5" }}>Date</p>
-                        </div>
-                      </div>
+                    {/* TITLE */}
+                    <div
+                      style={{ backgroundColor: "#1E3A8A", color: "#ffffff" }}
+                      className="px-2 py-1 font-semibold"
+                    >
+                      Application For Employment
+                    </div>
+
+                    {/* POSITION */}
+                    <div className="border p-2 text-center" style={{ color: "#7E86B5" }}>
+                      I Wish To Apply For The Post Of:{" "}
+                      <span className="font-bold underline" style={{ color: "#000" }}>
+                        {formData.position || "________"}
+                      </span>
+                    </div>
+
+                    {/* PERSONAL DETAILS */}
+                    <h3 style={{ color: "#DC2626" }} className="font-semibold mt-3">
+                      Personal Details :
+                    </h3>
+
+                    <table className="w-full border border-black mt-1">
+                      <tbody>
+                        <tr>
+                          <td className="border p-1 w-1/2" style={{ color: "#7E86B5" }}>
+                            Name: {formData.firstName} {formData.lastName}
+                          </td>
+                          <td className="border p-1" style={{ color: "#7E86B5" }}>
+                            Contact: {formData.phone}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td className="border p-1" style={{ color: "#7E86B5" }}>
+                            Email: {formData.email}
+                          </td>
+                          <td className="border p-1" style={{ color: "#7E86B5" }}>
+                            Location: {formData.city}, {formData.country}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td className="border p-1" style={{ color: "#7E86B5" }}>
+                            Experience: {formData.experience} years
+                          </td>
+                          <td className="border p-1" style={{ color: "#7E86B5" }}>
+                            Position: {formData.position}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    {/* SKILLS */}
+                    <h3 style={{ color: "#DC2626" }} className="font-semibold mt-3">
+                      Skills :
+                    </h3>
+                    <div className="border p-2 min-h-[60px]" style={{ color: "#7E86B5" }}>
+                      {formData.skills}
+                    </div>
+
+                    {/* QUALIFICATION */}
+                    <h3 style={{ color: "#DC2626" }} className="font-semibold mt-3">
+                      Qualification Details :
+                    </h3>
+
+                    <table className="w-full border border-black mt-1 text-center">
+                      <thead>
+                        <tr>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Qualification
+                          </th>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Institution
+                          </th>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Year
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {employment.map((job, i) => (
+                          <tr key={i}>
+                            <td className="border p-1 text-[#7E86B5]">{job.company}</td>
+                            <td className="border p-1 text-[#7E86B5]">{job.position}</td>
+                            <td className="border p-1 text-[#7E86B5]">{job.years}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    {/* EMPLOYMENT */}
+                    <h3 style={{ color: "#DC2626" }} className="font-semibold mt-3">
+                      Employment History :
+                    </h3>
+
+                    <table className="w-full border border-black mt-1 text-center">
+                      <thead>
+                        <tr>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Company
+                          </th>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Position
+                          </th>
+                          <th className="border p-1" style={{ color: "#7E86B5" }}>
+                            Years
+                          </th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                          {employment.map((job, i) => (
+                            <tr key={i}>
+                              <td className="border p-1 text-[#7E86B5]">{job.company}</td>
+                              <td className="border p-1 text-[#7E86B5]">{job.position}</td>
+                              <td className="border p-1 text-[#7E86B5]">{job.years}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                    </table>
+
+                    {/* COVER LETTER */}
+                    <h3 style={{ color: "#DC2626" }} className="font-semibold mt-3">
+                      Cover Letter :
+                    </h3>
+                    <div className="border p-2 min-h-[80px]" style={{ color: "#7E86B5" }}>
+                      {formData.coverLetter}
+                    </div>
+
+                    {/* DECLARATION */}
+                    <div className="mt-4 text-xs border p-2" style={{ color: "#7E86B5" }}>
+                      I certify that the information provided is true and correct.
+                    </div>
+
+                    {/* FOOTER */}
+                    <div className="flex justify-between mt-6 text-xs" style={{ color: "#7E86B5" }}>
+                      <span>Signature: __________</span>
+                      <span>Date: {new Date().toLocaleDateString()}</span>
                     </div>
 
                     {/* BUTTONS */}
@@ -267,11 +474,12 @@ export default function ApplyPage() {
 
                       <Button
                         onClick={handleSubmit}
-                        className="bg-[#CAAD37] text-white"
+                        style={{ backgroundColor: "#CAAD37", color: "#fff" }}
                       >
                         Final Submit
                       </Button>
                     </div>
+
                   </div>
                 )}
 
@@ -456,7 +664,7 @@ export default function ApplyPage() {
                       onClick={handleNext}
                       className="bg-[#19316C] hover:bg-[#19316C]/90"
                     >
-                      {step === 3 ? "Preview" : "Next"}
+                      {step === 5 ? "Preview" : "Next"}
                     </Button>
                   ) : null}
                 </div>
@@ -464,15 +672,15 @@ export default function ApplyPage() {
               </div>
             </motion.div>
 
-            {/* LIVE PREVIEW */}
+            {/* LIVE PREVIEW
             <div className="bg-gray-100 p-4 rounded shadow overflow-auto max-h-[800px]">
-              <ApplicationPreview data={formData} />
-            </div>
+              <ApplicationPreview data={formData} photo={photoPreview} />
+            </div> */}
 
           </div>
 
-        </div>
-      </section>
-    </div>
+        </div >
+      </section >
+    </div >
   );
 }
